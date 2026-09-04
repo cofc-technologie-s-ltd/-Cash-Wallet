@@ -1,68 +1,122 @@
 package com.cash.wallet
+
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
-import java.util.concurrent.Executors
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.NumberFormat
-import java.util.Locale
+import java.util.*
+import java.util.concurrent.Executors
+
 class MainActivity : AppCompatActivity() {
+    
+    private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout: TabLayout
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
-    private val walletData = WalletData()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val tvBalance = findViewById<TextView>(R.id.tvBalance)
-        val tvWallets = findViewById<TextView>(R.id.tvWallets)
-        val tvValue = findViewById<TextView>(R.id.tvValue)
-        val tvAddress = findViewById<TextView>(R.id.tvAddress)
-        val btnAuth = findViewById<Button>(R.id.btnAuth)
-        val btnSend = findViewById<Button>(R.id.btnSend)
-        val btnReceive = findViewById<Button>(R.id.btnReceive)
-        val btnHistory = findViewById<Button>(R.id.btnHistory)
-        val btnStake = findViewById<Button>(R.id.btnStake)
-        tvBalance.text = "💰 ${walletData.getFormattedBalance()}"
-        tvWallets.text = "📊 ${walletData.totalWallets} Wallets"
-        tvValue.text = "💎 ${walletData.getFormattedValue()}"
-        tvAddress.text = "📍 ${walletData.getFirstAddress()}"
+        
+        setupViews()
         setupBiometric()
-        btnAuth.setOnClickListener { authenticateUser() }
-        btnSend.setOnClickListener { Toast.makeText(this, "💸 Send Payment", Toast.LENGTH_SHORT).show() }
-        btnReceive.setOnClickListener { Toast.makeText(this, "📥 Receive - Share your address", Toast.LENGTH_SHORT).show() }
-        btnHistory.setOnClickListener { Toast.makeText(this, "📊 ${walletData.totalTransactions} transactions", Toast.LENGTH_SHORT).show() }
-        btnStake.setOnClickListener { Toast.makeText(this, "🔒 Stake CASH - ${walletData.stakingAPY}% APY", Toast.LENGTH_SHORT).show() }
+        setupWalletAnimation()
+        updateWalletData()
+        
+        // שינוי צבעים
+        findViewById<Button>(R.id.btnThemeToggle).setOnClickListener {
+            toggleTheme()
+        }
     }
+    
+    private fun setupViews() {
+        viewPager = findViewById(R.id.viewPager)
+        tabLayout = findViewById(R.id.tabLayout)
+        
+        val fragments = listOf(
+            WalletFragment(),
+            SendFragment(),
+            ReceiveFragment(),
+            HistoryFragment(),
+            AnalyticsFragment(),
+            SettingsFragment()
+        )
+        
+        val adapter = ViewPagerAdapter(this, fragments)
+        viewPager.adapter = adapter
+        
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> "💼 Wallet"
+                1 -> "💸 Send"
+                2 -> "📥 Receive"
+                3 -> "📊 History"
+                4 -> "📈 Analytics"
+                5 -> "⚙️ Settings"
+                else -> ""
+            }
+        }.attach()
+    }
+    
     private fun setupBiometric() {
         val executor = Executors.newSingleThreadExecutor()
-        biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                Toast.makeText(this@MainActivity, "✅ Authenticated!", Toast.LENGTH_SHORT).show()
-            }
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                Toast.makeText(this@MainActivity, "❌ Failed", Toast.LENGTH_SHORT).show()
-            }
-        })
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    Toast.makeText(this@MainActivity, "✅ Authenticated!", Toast.LENGTH_SHORT).show()
+                    updateWalletData()
+                }
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(this@MainActivity, "❌ Failed", Toast.LENGTH_SHORT).show()
+                }
+            })
+        
         promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle("CASH WALLET")
             .setSubtitle("Secure Authentication")
             .setDescription("Verify your identity")
             .setNegativeButtonText("Cancel")
             .build()
+        
+        // אימות אוטומטי
+        biometricPrompt.authenticate(promptInfo)
     }
-    private fun authenticateUser() { biometricPrompt.authenticate(promptInfo) }
-    inner class WalletData {
-        val totalWallets = 1033
-        val totalBalance = 6_600_000_000_000L
-        val totalValue = 132_000_000_000_000L
-        val totalTransactions = 10_000_000
-        val stakingAPY = 12.5
-        fun getFormattedBalance(): String = NumberFormat.getNumberInstance(Locale.US).format(totalBalance) + " CASH"
-        fun getFormattedValue(): String = "$${NumberFormat.getNumberInstance(Locale.US).format(totalValue)} USD"
-        fun getFirstAddress(): String = "CASH00BB0F6690D139792A7987BBDD9A4918FA"
+    
+    private fun toggleTheme() {
+        // החלפה בין מצב יום ללילה
+        val currentTheme = if (resources.configuration.uiMode and 0x30 == 0x20) "dark" else "light"
+        Toast.makeText(this, "🎨 Theme: ${if (currentTheme == "dark") "Light" else "Dark"}", Toast.LENGTH_SHORT).show()
+    }
+    
+    private fun setupWalletAnimation() {
+        val walletCard = findViewById<CardView>(R.id.walletCard)
+        walletCard.setOnClickListener {
+            Toast.makeText(this, "💰 Wallet opened!", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun updateWalletData() {
+        val tvBalance = findViewById<TextView>(R.id.tvBalance)
+        val tvWallets = findViewById<TextView>(R.id.tvWallets)
+        val tvValue = findViewById<TextView>(R.id.tvValue)
+        val tvTotalSupply = findViewById<TextView>(R.id.tvTotalSupply)
+        
+        tvBalance.text = "💰 6,600,000,000,000 CASH"
+        tvWallets.text = "📊 1,033 Wallets"
+        tvValue.text = "💎 $132,000,000,000,000 USD"
+        tvTotalSupply.text = "🔄 Total Supply: 6.6 Trillion CASH"
     }
 }
