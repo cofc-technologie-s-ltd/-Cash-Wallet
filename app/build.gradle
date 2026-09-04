@@ -23,9 +23,15 @@ android {
     signingConfigs {
         release {
             storeFile file('keystore/cash_wallet.jks')
-            storePassword System.getenv('KEYSTORE_PASSWORD') ?: 'CASH_WALLET_2026'
+            storePassword 'CASH_WALLET_2026'
             keyAlias 'cash_wallet'
-            keyPassword System.getenv('KEY_PASSWORD') ?: 'CASH_WALLET_2026'
+            keyPassword 'CASH_WALLET_2026'
+        }
+        debug {
+            storeFile file('keystore/cash_wallet.jks')
+            storePassword 'CASH_WALLET_2026'
+            keyAlias 'cash_wallet'
+            keyPassword 'CASH_WALLET_2026'
         }
     }
 
@@ -39,6 +45,7 @@ android {
         debug {
             applicationIdSuffix ".debug"
             debuggable true
+            signingConfig signingConfigs.debug
         }
     }
 
