@@ -15,14 +15,22 @@
         android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="v3.0.0"
+        android:textColor="#666666"
         android:layout_marginBottom="32dp" />
 
     <TextView
         android:id="@+id/tvBalance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Balance: 0 CASH"
-        android:textSize="24sp"
+        android:text="💰 0 CASH"
+        android:textSize="28sp"
+        android:textStyle="bold"
         android:textColor="#4CAF50"
         android:layout_marginBottom="48dp" />
 
@@ -30,10 +38,10 @@
         android:id="@+id/btnAuth"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="🔐 Biometric Authentication"
+        android:text="🔐 Biometric Auth"
         android:textSize="18sp"
         android:backgroundTint="#2196F3"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="12dp" />
 
     <Button
         android:id="@+id/btnSend"
@@ -41,13 +49,30 @@
         android:layout_height="56dp"
         android:text="💸 Send Payment"
         android:textSize="18sp"
-        android:backgroundTint="#4CAF50" />
+        android:backgroundTint="#4CAF50"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnHistory"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="📊 Transaction History"
+        android:textSize="18sp"
+        android:backgroundTint="#FF9800" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="v3.0.0 | 21 Quantum Security Layers"
+        android:text="21 Quantum Security Layers"
         android:textColor="#666666"
         android:layout_marginTop="48dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1,033 Wallets | 6.6T CASH"
+        android:textColor="#444444"
+        android:textSize="12sp"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>

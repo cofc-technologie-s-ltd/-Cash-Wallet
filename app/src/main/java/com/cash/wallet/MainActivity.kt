@@ -1,10 +1,10 @@
 package com.cash.wallet
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import java.util.concurrent.Executors
 
@@ -20,8 +20,9 @@ class MainActivity : AppCompatActivity() {
         val tvBalance = findViewById<TextView>(R.id.tvBalance)
         val btnAuth = findViewById<Button>(R.id.btnAuth)
         val btnSend = findViewById<Button>(R.id.btnSend)
+        val btnHistory = findViewById<Button>(R.id.btnHistory)
         
-        tvBalance.text = "💰 Balance: 6,600,000,000,000 CASH"
+        tvBalance.text = "💰 6,600,000,000,000 CASH"
         
         setupBiometric()
         
@@ -31,6 +32,10 @@ class MainActivity : AppCompatActivity() {
         
         btnSend.setOnClickListener {
             Toast.makeText(this, "✅ Payment sent successfully!", Toast.LENGTH_SHORT).show()
+        }
+        
+        btnHistory.setOnClickListener {
+            Toast.makeText(this, "📊 Showing transaction history", Toast.LENGTH_SHORT).show()
         }
     }
     
