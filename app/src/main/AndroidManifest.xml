@@ -11,7 +11,7 @@
     <application
         android:allowBackup="true"
         android:label="CASH WALLET"
-        android:theme="@style/Theme.CashWallet"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
 
