@@ -22,16 +22,18 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('keystore/cash_wallet.jks')
+            storeFile file('keystore/cash_wallet.p12')
             storePassword 'CASH_WALLET_2026'
             keyAlias 'cash_wallet'
             keyPassword 'CASH_WALLET_2026'
+            storeType 'pkcs12'
         }
         debug {
-            storeFile file('keystore/cash_wallet.jks')
+            storeFile file('keystore/cash_wallet.p12')
             storePassword 'CASH_WALLET_2026'
             keyAlias 'cash_wallet'
             keyPassword 'CASH_WALLET_2026'
+            storeType 'pkcs12'
         }
     }
 
