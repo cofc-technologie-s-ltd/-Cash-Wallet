@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CashWallet" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#0055FF</item>
+        <item name="colorPrimaryVariant">#003DCC</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:statusBarColor">#0055FF</item>
+    </style>
+
+    <style name="Theme.CashWallet.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">#0055FF</item>
+        <item name="android:statusBarColor">#0055FF</item>
+    </style>
+</resources>
